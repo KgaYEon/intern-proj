@@ -10,6 +10,7 @@ export default function DashboardPage() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
+  const [searchTerm, setSearchTerm] = useState('');
 
   const users = [
     { id: 1, name: '홍길동', gender: '남성', age: 24, email: 'hong1@example.com', info: 'A조 출신' },
@@ -29,8 +30,16 @@ export default function DashboardPage() {
     { id: 15, name: '하수빈', gender: '여성', age: 24, email: 'ha@example.com', info: 'AI 파트' },
   ];
 
-  const totalPages = Math.ceil(users.length / itemsPerPage);
-  const currentUsers = users
+  // ✅ 필터링
+  const filteredUsers = users.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // ✅ 필터링된 유저 기준으로 페이지 계산
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const currentUsers = filteredUsers
     .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
     .map((user, i) => ({
       ...user,
@@ -48,7 +57,16 @@ export default function DashboardPage() {
 
       <div className={`container ${sidebarOpen ? 'shifted' : ''}`}>
         <h2>계정 관리</h2>
-        <SearchBar />
+
+        {/* 🔍 검색바 연결 */}
+        <SearchBar
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onSubmit={() => {
+            console.log('검색 실행됨:', searchTerm);
+          }}
+        />
+
         <AccountTable data={currentUsers}>
           <Pagination
             currentPage={currentPage}
