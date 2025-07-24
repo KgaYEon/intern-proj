@@ -1,10 +1,12 @@
 import React from 'react';
 
-export default function UserCard({ user }) {
+export default function UserCard({ user, index }) {
+  const paddedIndex = String(index).padStart(2, '0');
+
   return (
     <div className="mobile-user-card">
       <div className="mobile-user-index-box">
-        {String(user.index + 1).padStart(2, '0')}
+        {paddedIndex}
       </div>
       <div className="mobile-user-info-box">
         <div className="mobile-user-name">{user.name}</div>
